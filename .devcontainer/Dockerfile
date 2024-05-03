@@ -1,8 +1,7 @@
 FROM node:21-alpine
 
 # Add dependencies to get Bun working on Alpine
-RUN apk --no-cache add ca-certificates wget
-
+RUN apk --no-cache add ca-certificates wget bash unzip
 # Install glibc to run Bun
 RUN if [[ $(uname -m) == "aarch64" ]] ; \
     then \
@@ -17,10 +16,25 @@ RUN if [[ $(uname -m) == "aarch64" ]] ; \
     apk add --no-cache --force-overwrite glibc-2.28-r0.apk ; \
     rm glibc-2.28-r0.apk ; \
     fi
-
 # Install Bun in the specified version
-ARG BUN_VERSION=1.1.6
-RUN apk add bash curl unzip git && \
-    npm install bun --global && \
-    # ln -s $HOME/.bun/bin/bun /usr/local/bin/bun && \
-    npm install turbo --global
+RUN npm install bun --global
+
+# Install Git
+RUN apk --no-cache add git
+
+# Install Turborepo
+RUN npm install turbo --global
+
+# Install Supabase-CLI
+RUN if [[ $(uname -m) == "aarch64" ]] ; \
+    then \
+    # aarch64
+    wget https://github.com/supabase/cli/releases/download/v1.166.0/supabase_1.166.0_linux_arm64.apk ; \
+    apk add --no-cache --allow-untrusted --force-overwrite supabase_1.166.0_linux_arm64.apk ; \
+    rm supabase_1.166.0_linux_arm64.apk ; \
+    else \
+    # x86_64
+    wget https://github.com/supabase/cli/releases/download/v1.166.0/supabase_1.166.0_linux_amd64.apk ; \
+    apk add --no-cache --force-overwrite supabase_1.166.0_linux_amd64.apk ; \
+    rm supabase_1.166.0_linux_amd64.apk ; \
+    fi
