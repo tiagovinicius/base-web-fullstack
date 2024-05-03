@@ -1,23 +1,26 @@
-ARG NODE_VERSION=21
+FROM node:21-alpine
 
-FROM node:${NODE_VERSION}-slim as base
+# Add dependencies to get Bun working on Alpine
+RUN apk --no-cache add ca-certificates wget
 
-ARG BUN_VERSION=1.1.6
-
-WORKDIR /build
+# Install glibc to run Bun
+RUN if [[ $(uname -m) == "aarch64" ]] ; \
+    then \
+    # aarch64
+    wget https://raw.githubusercontent.com/squishyu/alpine-pkg-glibc-aarch64-bin/master/glibc-2.26-r1.apk ; \
+    apk add --no-cache --allow-untrusted --force-overwrite glibc-2.26-r1.apk ; \
+    rm glibc-2.26-r1.apk ; \
+    else \
+    # x86_64
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk ; \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub ; \
+    apk add --no-cache --force-overwrite glibc-2.28-r0.apk ; \
+    rm glibc-2.28-r0.apk ; \
+    fi
 
 # Install Bun in the specified version
-RUN apt update && apt install -y bash curl unzip && \
- curl -fsSL https://bun.sh/install | bash -s -- bun-v${BUN_VERSION}
-
-ENV PATH="${PATH}:/root/.bun/bin"
-
-# adding apk deps to avoid node-gyp related errors and some other stuff. adds turborepo globally
-RUN apk add -f --update --no-cache --virtual .gyp nano bash libc6-compat python3 make g++ \
-      && yarn global add turbo \
-      && apk del .gyp
-
-# Copy the lock file and app manifest, then install
-# the dependencies, including the dev dependencies
-#
-COPY bun.lockb package.json ./
+ARG BUN_VERSION=1.1.6
+RUN apk add bash curl unzip git && \
+    npm install bun --global && \
+    # ln -s $HOME/.bun/bin/bun /usr/local/bin/bun && \
+    npm install turbo --global

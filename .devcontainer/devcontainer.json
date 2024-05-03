@@ -17,7 +17,9 @@
 				"Orta.vscode-jest",
 				"esbenp.prettier-vscode",
 				"bradlc.vscode-tailwindcss",
-				"Vercel.turbo-vsc"
+				"Vercel.turbo-vsc",
+				"ms-azuretools.vscode-docker",
+				"GitHub.vscode-pull-request-github"
 			]
 		}
 	},
@@ -26,8 +28,9 @@
 	"forwardPorts": ["3000"],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "bun install --frozen-lockfile && npm dev",
+	"postCreateCommand": "chown -R node /workspaces/ && bun install --frozen-lockfile && turbo daemon start",
+	"postAttachCommand": "bash"
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "ubuntu"
+	// "remoteUser": "node"
 }
