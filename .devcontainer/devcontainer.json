@@ -12,8 +12,8 @@
 	// Configure tool-specific properties.
 	"customizations": {
 		"settings": {
-        	"terminal.integrated.shell.linux": "/bin/bash"
-    	},
+			"terminal.integrated.shell.linux": "/bin/bash"
+		},
 		// Configure properties specific to VS Code.
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
@@ -26,14 +26,15 @@
 				"esbenp.prettier-vscode",
 				"bradlc.vscode-tailwindcss",
 				"ms-azuretools.vscode-docker",
-				"GitHub.vscode-pull-request-github"
+				"GitHub.vscode-pull-request-github",
+				"foxundermoon.shell-format"
 			]
 		}
 	},
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": ["3000"],
-
+	"forwardPorts": [
+		"3000"
+	],
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "bash .devcontainer/setup.sh",
 	"postAttachCommand": "bash"
