@@ -27,7 +27,9 @@
 				"bradlc.vscode-tailwindcss",
 				"ms-azuretools.vscode-docker",
 				"GitHub.vscode-pull-request-github",
-				"foxundermoon.shell-format"
+				"foxundermoon.shell-format",
+				"DavidKol.fastcompare",
+				"amitkhonde.better-find-and-replace"
 			]
 		}
 	},

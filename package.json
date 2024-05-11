@@ -3,11 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": ["apps/*", "packages/*"],
-  "packageManager": "bun@1.1.6",
-  "scripts": {
-    "dev": "turbo run dev"
+  "packageManager": "bun@1.1.7",
+   "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter=docs^... && changeset publish"
   },
   "devDependencies": {
-    "supabase": "^1.165.0"
+    "supabase": "^1.165.0",
+    "@changesets/cli": "^2.27.1",
+    "prettier": "^3.2.5",
+    "turbo": "latest"
   }
 }
